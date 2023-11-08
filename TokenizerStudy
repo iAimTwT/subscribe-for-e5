@@ -1,0 +1,47 @@
+from transformers import BertTokenizer, BertForTokenClassification
+import torch
+
+model_name = "bert-base-chinese"
+tokenizer = BertTokenizer.from_pretrained(model_name)
+model = BertForTokenClassification.from_pretrained(model_name)
+
+
+# 输入文本
+sen = "地震是地球表面发生的一种自然现象，通常由地球内部的构造活动引起。"
+
+# 使用标记器对文本进行分词
+tokens = tokenizer.tokenize(sen)
+print(tokens)
+
+ids = tokenizer.convert_tokens_to_ids(tokens)
+print(ids)
+
+
+# 使用encode编码更加便捷
+ids = tokenizer.encode(sen, add_special_tokens=True)
+print(ids)
+
+# decode解码
+sen = tokenizer.decode(ids, skip_special_tokens=False)
+print(sen)
+
+sens = ["地震是地球上的岩石和土壤在地下应力积累并释放的结果，导致地面的震动和振动。",
+        "火山爆发时，地下岩浆的运动也可以引发地震。",
+        "地球的外部由若干块状的地壳板块组成，它们在地球表面不断移动。当这些板块相互碰撞、分离或滑动时，会产生巨大的地质应力，最终导致地震。"]
+result = tokenizer.batch_encode_plus(
+    sens,  # 多个句子的列表
+    padding=True,  # 是否进行填充以使它们具有相同的长度
+    truncation=True,  # 是否截断句子以使它们具有相同的长度
+    return_attention_mask=True,  # 是否返回注意力掩码
+    return_tensors='pt'  # 返回 PyTorch 张量
+)
+
+# 输出结果
+print(result)
+
+
+
+
+
+
+
